@@ -28,4 +28,32 @@ var timeRefresh = function() {
 
   // display current day on page
   $("#currentDay").text(currentDay + daySuffix);
+
+  // find all description boxes
+  var taskNameQry = $(".description");
+
+  // remove current color-code classes
+  taskNameQry.removeClass("past present future");
+  
+  // color code boxes according to urgency
+  taskNameQry.each(function() {
+    var currentId = $(this).attr("id")
+    var timeSlotObj = luxon.DateTime.fromFormat(currentId, "ha");
+
+    if (timeSlotObj.c.hour < currentTimeObj.c.hour) {
+      $(this).addClass("past");
+    }
+
+    if (timeSlotObj.c.hour === currentTimeObj.c.hour) {
+      $(this).addClass("present");
+    }
+
+    if (timeSlotObj.c.hour > currentTimeObj.c.hour) {
+      $(this).addClass("future");
+    }
+  });
+};
+
+var initializeListener = function() {
+  $(".container").on("click", taskEditHandler);
 }
